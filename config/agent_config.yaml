@@ -1,0 +1,87 @@
+# E-Raksha LangGraph Agent Configuration
+# Person 4: Agentic deepfake detection with intelligent routing
+
+# Decision thresholds for LangGraph routing
+thresholds:
+  high_confidence: 0.85    # Above this: accept student prediction
+  medium_confidence: 0.60  # Above this: route to AV specialist
+  low_confidence: 0.40     # Below this: route to human review
+
+# AV-Model routing parameters
+routing:
+  use_av_model: true
+  av_threshold: 0.70
+  lip_sync_threshold: 0.30
+
+# Confidence smoothing parameters
+smoothing:
+  alpha: 0.6              # EMA smoothing factor (0-1)
+  window_size: 8          # Number of recent predictions to consider
+  reset_on_new_video: true
+
+# Model paths (Person 4: Student + AV-Model)
+models:
+  student: "models/baseline_student.pt"
+  av_model: "models/av_model_student.pt"
+  
+# Preprocessing parameters (optimized for AV-Model)
+preprocessing:
+  max_frames: 16          # Maximum frames to extract
+  audio_duration: 3.0     # Audio duration in seconds
+  sample_rate: 16000      # Audio sample rate
+  face_size: 224          # Input face size (224x224)
+  
+# Logging configuration
+logging:
+  log_file: "logs/agent_logs.jsonl"
+  save_heatmaps: true
+  heatmap_dir: "logs/heatmaps"
+  log_level: "INFO"
+  max_log_size_mb: 100
+  
+# Performance settings
+performance:
+  batch_size: 1           # For mobile deployment
+  use_half_precision: false  # FP16 for faster inference
+  max_processing_time: 10.0   # Max seconds per video
+  
+# Security settings
+security:
+  max_file_size_mb: 100   # Maximum video file size
+  allowed_formats: ["mp4", "avi", "mov", "mkv"]
+  sanitize_paths: true
+  
+# Explanation settings (Person 4: Enhanced explainability)
+explainability:
+  generate_heatmaps: true
+  save_explanations: true
+  heatmap_top_k_frames: 3  # Generate heatmaps for top-k frames
+  save_intermediate_features: false
+  
+# Calibration settings (for confidence calibration)
+calibration:
+  temperature_scaling: true
+  temperature: 1.0        # Will be learned from validation data
+  
+# Agent behavior
+behavior:
+  conservative_mode: false  # If true, lower thresholds for fake detection
+  adaptive_thresholds: false  # If true, adapt thresholds based on recent performance
+  
+# Mobile deployment settings
+mobile:
+  optimize_for_battery: true
+  reduce_computation: false
+  cache_features: true
+  
+# Monitoring and alerts
+monitoring:
+  enable_performance_tracking: true
+  alert_on_low_confidence: true
+  alert_threshold: 0.3
+  
+# Development/Debug settings
+debug:
+  save_debug_info: false
+  verbose_logging: false
+  profile_performance: false
