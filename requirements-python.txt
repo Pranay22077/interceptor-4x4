@@ -1,8 +1,8 @@
 # E-Raksha Deepfake Detection System - Core Dependencies
 # Machine Learning & Computer Vision
-torch==2.1.0
-torchvision==0.16.0
-torchaudio==2.1.0
+torch>=2.2.0
+torchvision>=0.17.0
+torchaudio>=2.2.0
 numpy==1.24.3
 opencv-python-headless==4.8.1.78
 Pillow==10.1.0
