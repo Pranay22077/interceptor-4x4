@@ -35,6 +35,13 @@ build/
 .env
 .env.local
 .env.*.local
+.env.production
+
+# SSH keys and credentials
+ssh
+ssh.pub
+*.pem
+*.key
 
 # Logs
 *.log
@@ -85,3 +92,16 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Deployment files (Vultr-specific)
+VULTR_DEPLOYMENT_GUIDE.md
+VULTR_DEPLOYMENT_SUMMARY.md
+VULTR_QUICK_START.md
+DEPLOYMENT_README.md
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_UPDATE_SUMMARY.md
+deploy-vultr.sh
+health-check.sh
+
+# Snapshots and backups
+unstaged_snapshot_*/
