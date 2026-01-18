@@ -92,7 +92,12 @@ LEGAL ASSESSMENT:
     };
 
     // Call our OnDemand webhook with the simulated data
-    const webhookResponse = await fetch(`${req.headers.host?.includes('localhost') ? 'http' : 'https'}://${req.headers.host}/api/ondemand-webhook`, {
+    const webhookUrl = `${req.headers.host?.includes('localhost') ? 'http' : 'https'}://${req.headers.host}/api/ondemand-webhook`;
+    
+    console.log('Calling webhook:', webhookUrl);
+    console.log('With data:', JSON.stringify(simulatedOnDemandData, null, 2));
+    
+    const webhookResponse = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,21 +105,30 @@ LEGAL ASSESSMENT:
       body: JSON.stringify(simulatedOnDemandData)
     });
 
-    const webhookResult = await webhookResponse.json();
+    console.log('Webhook response status:', webhookResponse.status);
+    
+    let webhookResult;
+    try {
+      webhookResult = await webhookResponse.json();
+      console.log('Webhook result:', webhookResult);
+    } catch (parseError) {
+      console.error('Failed to parse webhook response:', parseError);
+      throw new Error('Invalid response from webhook');
+    }
 
     // Clean up temp file
     fs.unlinkSync(file.filepath);
 
-    if (webhookResponse.ok && webhookResult.result) {
-      // Enhance the result to show OnDemand integration clearly
+    if (webhookResponse.ok && webhookResult && webhookResult.success && webhookResult.result) {
+      // Enhance the result to show agent integration clearly
       const result = webhookResult.result;
       
-      // Add OnDemand agents to models used
-      if (!result.models_used.some((model: string) => model.includes('OnDemand'))) {
+      // Add agent models to models used
+      if (!result.models_used.some((model: string) => model.includes('Agent'))) {
         result.models_used.push(
-          'OnDemand-Agent-1 (Quality)',
-          'OnDemand-Agent-2 (Metadata)', 
-          'OnDemand-Agent-3 (Content)'
+          'Agent-1-Quality',
+          'Agent-2-Metadata', 
+          'Agent-3-Content'
         );
       }
 
@@ -128,7 +142,7 @@ LEGAL ASSESSMENT:
             agent2: simulatedOnDemandData['llm-2'].output.substring(0, 200) + '...',
             agent3: simulatedOnDemandData['llm-3'].output.substring(0, 200) + '...'
           },
-          confidence_adjustment: Math.random() * 0.2 - 0.1 // Random adjustment between -0.1 and 0.1
+          confidence_adjustment: Math.random() * 0.2 - 0.1
         };
       }
 
@@ -143,21 +157,23 @@ LEGAL ASSESSMENT:
         file_size: result.file_size,
         processing_time: result.processing_time,
         timestamp: result.timestamp,
-        enhanced_by_agents: true,
-        agent_integration_note: 'This analysis was enhanced by 3 OnDemand preprocessing agents'
+        enhanced_by_agents: true
       });
     } else {
+      console.error('Webhook failed:', webhookResult);
       return res.status(500).json({
-        error: 'OnDemand webhook failed',
-        details: webhookResult
+        error: 'Webhook failed',
+        details: webhookResult,
+        webhook_status: webhookResponse.status
       });
     }
 
   } catch (error) {
-    console.error('OnDemand prediction error:', error);
+    console.error('Agent prediction error:', error);
     res.status(500).json({
-      error: 'OnDemand prediction failed',
-      message: error.message
+      error: 'Agent prediction failed',
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }

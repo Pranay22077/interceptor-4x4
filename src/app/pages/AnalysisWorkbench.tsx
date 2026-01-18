@@ -551,10 +551,9 @@ const AnalysisWorkbench = () => {
                 <button
                   onClick={() => analyzeWithAgents()}
                   disabled={!selectedFile}
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-xl transition-colors shadow-lg text-sm sm:text-base flex items-center justify-center gap-2"
+                  className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors shadow-lg text-sm sm:text-base"
                 >
-                  <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
-                  Analyze with OnDemand Agents
+                  Analyze with Agents
                 </button>
                 <button
                   onClick={handleReset}
@@ -620,10 +619,10 @@ const AnalysisWorkbench = () => {
                   )}
                 </div>
                 
-                {/* OnDemand Agent Status */}
+                {/* Agent Status */}
                 <div className="bg-green-50/50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
                   <p className="text-xs font-semibold text-green-700 dark:text-green-300 mb-2">
-                    🤖 Pre-processing Agents
+                    Pre-processing Agents
                   </p>
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div className="flex items-center gap-1">
@@ -761,14 +760,13 @@ const AnalysisWorkbench = () => {
                           : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
                       }`}
                     >
-                      {model.includes('OnDemand') || model.includes('Agent') ? '🤖 ' : '🧠 '}
                       {model}
                     </span>
                   ))}
                 </div>
                 {analysisResult.raw_result?.ondemand_analysis?.agents_used > 0 && (
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    ✨ Enhanced analysis with {analysisResult.raw_result.ondemand_analysis.agents_used} OnDemand preprocessing agents
+                    Enhanced analysis with {analysisResult.raw_result.ondemand_analysis.agents_used} preprocessing agents
                   </p>
                 )}
               </div>
@@ -786,7 +784,7 @@ const AnalysisWorkbench = () => {
                   <div className="mt-4 p-3 bg-green-50/50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                     <p className="text-xs font-semibold text-green-700 dark:text-green-300 mb-2 flex items-center gap-1">
                       <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                      OnDemand Agent Analysis
+                      Agent Analysis
                     </p>
                     <div className="space-y-2 text-xs text-green-600 dark:text-green-400">
                       {analysisResult.raw_result.ondemand_analysis.agent_insights.agent1 && (
