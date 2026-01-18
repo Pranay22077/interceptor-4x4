@@ -124,7 +124,7 @@ LEGAL ASSESSMENT:
       const result = webhookResult.result;
       
       // Add agent models to models used
-      if (!result.models_used.some((model: string) => model.includes('Agent'))) {
+      if (!result.models_used.some(model => model.includes('Agent'))) {
         result.models_used.push(
           'Agent-1-Quality',
           'Agent-2-Metadata', 
