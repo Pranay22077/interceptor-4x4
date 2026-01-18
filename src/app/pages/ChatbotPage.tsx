@@ -32,6 +32,8 @@ const ChatbotPage = () => {
   const [showRecommendedQuestions, setShowRecommendedQuestions] = useState(true);
   const [analysisContext, setAnalysisContext] = useState<AnalysisContext | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connected');
+  const [messageCount, setMessageCount] = useState(0);
+  const [lastMessageTime, setLastMessageTime] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when messages change
@@ -59,30 +61,44 @@ const ChatbotPage = () => {
     },
     {
       id: '3',
-      text: 'How was the video quality assessed?',
-      category: 'agents',
-      requiresAnalysis: true,
-      agentSpecific: true
+      text: 'How does Interceptor\'s agentic workflow work?',
+      category: 'technical',
+      requiresAnalysis: false,
+      agentSpecific: false
     },
     {
       id: '4',
-      text: 'What metadata patterns were found?',
-      category: 'agents',
+      text: 'What specialist models analyzed my video?',
+      category: 'technical',
       requiresAnalysis: true,
-      agentSpecific: true
+      agentSpecific: false
     },
     {
       id: '5',
-      text: 'How does the agentic workflow work?',
+      text: 'How accurate is Interceptor\'s detection?',
       category: 'technical',
       requiresAnalysis: false,
-      agentSpecific: true
+      agentSpecific: false
     },
     {
       id: '6',
+      text: 'What file formats does Interceptor support?',
+      category: 'technical',
+      requiresAnalysis: false,
+      agentSpecific: false
+    },
+    {
+      id: '7',
       text: 'What should I do with these results?',
       category: 'guidance',
       requiresAnalysis: true,
+      agentSpecific: false
+    },
+    {
+      id: '8',
+      text: 'How do I get started with Interceptor?',
+      category: 'guidance',
+      requiresAnalysis: false,
       agentSpecific: false
     }
   ];
@@ -161,11 +177,11 @@ const ChatbotPage = () => {
       // Create welcome message
       const welcomeMessage: ChatMessage = {
         id: 'welcome',
-        content: `Hello! I'm your Interceptor AI assistant. I can help you understand your video analysis results, explain how our agentic deepfake detection system works, and answer questions about the technology. ${
+        content: `Hello! I'm your dedicated Interceptor AI Assistant.\n\nI specialize exclusively in Interceptor's deepfake detection system:\n\n• Video Analysis Results: Understanding your detection results and confidence scores\n• Agentic Workflow: How our intelligent agents enhance detection accuracy\n• Technical Details: Specialist models, processing pipeline, and architecture\n• System Features: File formats, API integration, and deployment options\n• Performance Metrics: Accuracy statistics, processing speed, and reliability\n\n${
           analysisContext 
-            ? `I can see you have a recent analysis of "${analysisContext.filename}" - feel free to ask me about it!` 
-            : `Upload a video for analysis first to get personalized insights about your results.`
-        } What would you like to know?`,
+            ? `📊 I can see you have a recent analysis of "${analysisContext.filename}" - let me help you understand the results!` 
+            : `💡 Upload a video for analysis first to get personalized insights, or ask me anything about Interceptor's deepfake detection technology!`
+        }\n\nWhat aspect of Interceptor would you like to explore?`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -178,6 +194,41 @@ const ChatbotPage = () => {
 
   const handleSendMessage = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
+
+    // Rate limiting: max 10 messages per minute
+    const now = Date.now();
+    if (messageCount >= 10 && now - lastMessageTime < 60000) {
+      const errorMessage: ChatMessage = {
+        id: Date.now().toString(),
+        content: 'Please slow down! You can send up to 10 messages per minute. This helps me provide better responses to everyone.',
+        sender: 'bot',
+        timestamp: new Date(),
+        error: 'Rate limit exceeded'
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      return;
+    }
+
+    // Reset counter if more than a minute has passed
+    if (now - lastMessageTime > 60000) {
+      setMessageCount(1);
+    } else {
+      setMessageCount(prev => prev + 1);
+    }
+    setLastMessageTime(now);
+
+    // Input validation
+    if (messageText.length > 500) {
+      const errorMessage: ChatMessage = {
+        id: Date.now().toString(),
+        content: 'Please keep your messages under 500 characters. I can help you better with shorter, focused questions!',
+        sender: 'bot',
+        timestamp: new Date(),
+        error: 'Message too long'
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      return;
+    }
 
     // Add user message
     const userMessage: ChatMessage = {
@@ -262,7 +313,10 @@ const ChatbotPage = () => {
             </div>
           </div>
           <p className="text-gray-600 dark:text-gray-400 mb-2">
-            Intelligent AI assistant for deepfake detection insights
+            Specialized AI assistant for Interceptor's deepfake detection system
+          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
+            Exclusively focused on Interceptor's technology, features, and video analysis results.
           </p>
           
           {/* Connection Status */}
@@ -385,7 +439,10 @@ const ChatbotPage = () => {
                 Suggested questions:
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {recommendedQuestions.slice(0, 4).map((question) => (
+                {(analysisContext 
+                  ? recommendedQuestions.filter(q => q.requiresAnalysis || q.category === 'technical').slice(0, 4)
+                  : recommendedQuestions.filter(q => !q.requiresAnalysis).slice(0, 4)
+                ).map((question) => (
                   <button
                     key={question.id}
                     onClick={() => handleQuestionClick(question)}
@@ -402,24 +459,35 @@ const ChatbotPage = () => {
           <div className="p-6 border-t border-gray-200 dark:border-gray-800">
             <div className="flex items-end gap-3">
               <div className="flex-1">
-                <textarea
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={handleKeyPress}
-                  placeholder="Ask me about your video analysis results..."
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                  rows={1}
-                  style={{ minHeight: '48px', maxHeight: '120px' }}
-                />
+                <div className="relative">
+                  <textarea
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder="Ask me about Interceptor's deepfake detection system..."
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    rows={1}
+                    maxLength={500}
+                    style={{ minHeight: '48px', maxHeight: '120px' }}
+                  />
+                  <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                    {inputMessage.length}/500
+                  </div>
+                </div>
               </div>
               <button
                 onClick={() => handleSendMessage(inputMessage)}
-                disabled={!inputMessage.trim() || isLoading}
+                disabled={!inputMessage.trim() || isLoading || inputMessage.length > 500}
                 className="px-4 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center justify-center"
               >
                 <Send className="w-5 h-5" />
               </button>
             </div>
+            {messageCount > 5 && (
+              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Messages sent: {messageCount}/10 per minute
+              </div>
+            )}
           </div>
         </div>
       </div>
