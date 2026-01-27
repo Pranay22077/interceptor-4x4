@@ -5,7 +5,7 @@
 **Team Members:**
 - Pranay Gadh
 - Rishabh Ranjan Singh
-- Prakhar Sharma
+- Riddhi Sharma
 - Raja Rathour
 
 ---
@@ -300,5 +300,3 @@ Unlike traditional single-model approaches, INTERCEPTOR employs an intelligent a
 ## Conclusion
 
 INTERCEPTOR represents a paradigm shift in deepfake detection through its agentic intelligence approach. By combining intelligent routing with specialized analysis, we deliver a solution that is faster, more accurate, and more explainable than existing alternatives. Our freemium model ensures accessibility while our technical architecture provides the robustness needed for real-world deployment.
-
-Within the 24-hour hackathon timeline, we will demonstrate a functional prototype that showcases the core innovation of agentic deepfake detection, setting the foundation for a comprehensive digital safety ecosystem.
