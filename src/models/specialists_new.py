@@ -1,5 +1,5 @@
 """
-E-Raksha Specialist Models with EfficientNet-B4 Backbone
+Interceptor Specialist Models with EfficientNet-B4 Backbone
 
 This module contains all specialist deepfake detection models, each designed
 to detect specific types of manipulation artifacts. All models use EfficientNet-B4
@@ -13,7 +13,7 @@ Models included:
 - LL: Low-light condition analysis
 - TM: Temporal consistency analysis
 
-Author: E-Raksha Team
+Author: Interceptor Team
 Created: Initial development phase
 """
 

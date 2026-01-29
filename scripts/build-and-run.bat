@@ -1,7 +1,7 @@
 @echo off
-REM E-Raksha Quick Build and Run Script for Windows
+REM Interceptor Quick Build and Run Script for Windows
 
-echo [RUN] E-Raksha Quick Deployment
+echo [RUN] Interceptor Quick Deployment
 echo ============================
 
 REM Check if Docker is installed
@@ -35,7 +35,7 @@ if not exist "models\baseline_student.pt" (
 )
 
 echo.
-echo [SETUP] Building and starting E-Raksha...
+echo [SETUP] Building and starting Interceptor...
 echo This may take 2-3 minutes on first run...
 echo.
 
@@ -43,7 +43,7 @@ REM Build and start the application
 docker-compose up --build
 
 echo.
-echo 🛑 E-Raksha has been stopped.
+echo 🛑 Interceptor has been stopped.
 echo To restart: docker-compose up
 echo To rebuild: docker-compose up --build
 pause

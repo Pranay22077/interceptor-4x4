@@ -11,8 +11,8 @@ const AdvancedAnalytics = () => {
             Advanced Analytics Suite
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto">
-            Comprehensive deepfake detection analysis powered by ApexCharts, ECharts, Plotly.js, and D3.js. 
-            Explore interactive heatmaps, statistical distributions, correlation matrices, and custom visualizations 
+            Comprehensive deepfake detection analysis powered by ApexCharts, ECharts, Plotly.js, and D3.js.
+            Explore interactive heatmaps, statistical distributions, correlation matrices, and custom visualizations
             that provide deep insights into your AI model performance and detection accuracy.
           </p>
         </div>
@@ -67,9 +67,9 @@ const AdvancedAnalytics = () => {
         {/* Integration Information */}
         <div className="mt-16 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-2xl p-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            Integration with E-Raksha Interceptor
+            Integration with Interceptor
           </h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -79,7 +79,7 @@ const AdvancedAnalytics = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Real-time Processing</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Charts update in real-time as videos are processed through the 6 specialist models, 
+                Charts update in real-time as videos are processed through the 6 specialist models,
                 showing live confidence scores and feature analysis.
               </p>
             </div>
@@ -92,7 +92,7 @@ const AdvancedAnalytics = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Model Insights</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Visualize how each specialist model (BG, AV, CM, RR, LL, TM) contributes to the 
+                Visualize how each specialist model (BG, AV, CM, RR, LL, TM) contributes to the
                 final classification with detailed performance metrics.
               </p>
             </div>
@@ -105,7 +105,7 @@ const AdvancedAnalytics = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Interactive Analysis</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Explore frame-by-frame analysis, zoom into suspicious regions, and understand 
+                Explore frame-by-frame analysis, zoom into suspicious regions, and understand
                 the reasoning behind each detection decision.
               </p>
             </div>

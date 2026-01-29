@@ -28,7 +28,7 @@ const FAQ = () => {
   const faqs = [
     {
       q: 'What is Interceptor?',
-      a: `Interceptor is an agentic AI system for deepfake detection developed for the E-Raksha Hackathon 2026. It uses 6 specialist neural networks (BG, AV, CM, RR, LL, TM models) coordinated by a LangGraph agent to provide comprehensive video authenticity analysis with ${(stats.averageConfidence * 100).toFixed(1)}% detection confidence.`,
+      a: `Interceptor is an agentic AI system for deepfake detection. It uses 6 specialist neural networks (BG, AV, CM, RR, LL, TM models) coordinated by a LangGraph agent to provide comprehensive video authenticity analysis with ${(stats.averageConfidence * 100).toFixed(1)}% detection confidence.`,
     },
     {
       q: 'How is Interceptor different from other deepfake detectors?',
@@ -86,10 +86,6 @@ const FAQ = () => {
       q: 'What is the technology stack?',
       a: 'PyTorch for neural networks, LangGraph for agentic orchestration, FastAPI for backend, React for frontend, MTCNN for face detection, and Docker for deployment. ResNet18-based architectures with knowledge distillation.',
     },
-    {
-      q: 'Who built Interceptor?',
-      a: 'Interceptor was developed by a multidisciplinary team for the E-Raksha Hackathon 2026 (Problem Statement II) - National Cyber Challenge by eDC IIT Delhi in collaboration with CyberPeace.',
-    },
   ];
 
   const toggleQuestion = (index: number) => {
@@ -137,9 +133,8 @@ const FAQ = () => {
                 </div>
               </button>
               <div
-                className={`overflow-hidden transition-all duration-700 ease-in-out ${
-                  openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-700 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
               >
                 <div className="px-6 pb-4 border-t border-gray-200 dark:border-gray-800 pt-4 mt-2">
                   <p className="text-gray-600 dark:text-gray-400 leading-relaxed">

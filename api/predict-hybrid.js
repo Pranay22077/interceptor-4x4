@@ -1,8 +1,8 @@
 /**
- * Hybrid E-Raksha Deepfake Detection API
+ * Hybrid Interceptor Deepfake Detection API
  * 
  * Enhanced version that simulates OnDemand agent capabilities
- * while maintaining compatibility with existing E-Raksha models
+ * while maintaining compatibility with existing Interceptor models
  */
 
 import { createHash } from 'crypto';
@@ -15,7 +15,7 @@ export const config = {
   },
 };
 
-// Existing E-Raksha specialist models
+// Existing Interceptor specialist models
 const MODELS = {
   "bg": { "name": "BG-Model-N", "accuracy": 0.54, "weight": 1.0 },
   "av": { "name": "AV-Model-N", "accuracy": 0.53, "weight": 1.0 },
@@ -29,14 +29,14 @@ const MODELS = {
  */
 function generateVideoPerspectives(videoAnalysis, prediction, preprocessingData = null) {
   const perspectives = [];
-  
+
   // Perspective 1: Technical Analysis (enhanced with agent data)
   let technicalInsight = `Video shows ${videoAnalysis.brightness < 80 ? 'low-light' : 'normal'} conditions with ${videoAnalysis.blur_score < 50 ? 'high' : 'moderate'} compression artifacts. Frame rate appears consistent at ${videoAnalysis.fps}fps.`;
-  
+
   if (preprocessingData?.agent1_output) {
     technicalInsight += ` OnDemand Agent 1 analysis: ${preprocessingData.agent1_output.substring(0, 100)}...`;
   }
-  
+
   perspectives.push({
     type: "Technical Analysis",
     insight: technicalInsight,
@@ -52,11 +52,11 @@ function generateVideoPerspectives(videoAnalysis, prediction, preprocessingData 
   // Perspective 2: Temporal Consistency (enhanced with agent data)
   const temporalScore = 0.85 + (Math.abs(videoAnalysis.file_hash.charCodeAt(0)) % 15) / 100;
   let temporalInsight = `Frame-to-frame analysis reveals ${temporalScore > 0.9 ? 'high' : temporalScore > 0.8 ? 'moderate' : 'low'} temporal consistency. ${temporalScore < 0.85 ? 'Potential temporal artifacts detected.' : 'No significant temporal anomalies found.'}`;
-  
+
   if (preprocessingData?.agent2_output) {
     temporalInsight += ` OnDemand Agent 2 analysis: ${preprocessingData.agent2_output.substring(0, 100)}...`;
   }
-  
+
   perspectives.push({
     type: "Temporal Consistency",
     insight: temporalInsight,
@@ -75,15 +75,15 @@ function generateVideoPerspectives(videoAnalysis, prediction, preprocessingData 
   if (videoAnalysis.file_size > 1024 * 1024) authenticityFactors.push("Appropriate file size");
   if (videoAnalysis.duration > 2) authenticityFactors.push("Sufficient duration for analysis");
   if (preprocessingData) authenticityFactors.push("OnDemand agent preprocessing completed");
-  
+
   let authenticityInsight = `Overall authenticity assessment based on ${authenticityFactors.length} positive indicators. ${prediction.is_fake ? 'Multiple deepfake signatures detected.' : 'Content appears authentic based on current analysis.'}`;
-  
+
   if (preprocessingData) {
     authenticityInsight += ` OnDemand agents provided additional context for enhanced analysis.`;
   }
-  
+
   perspectives.push({
-    type: "Authenticity Assessment", 
+    type: "Authenticity Assessment",
     insight: authenticityInsight,
     confidence: prediction.confidence,
     indicators: authenticityFactors.length > 0 ? authenticityFactors : ["Limited authenticity indicators"]
@@ -152,32 +152,32 @@ function performAuthenticityCheck(videoAnalysis, filename, preprocessingData = n
 function extractAuthenticityInsights(preprocessingData) {
   let scoreAdjustment = 0;
   const indicators = [];
-  
+
   if (!preprocessingData) return { scoreAdjustment, indicators };
-  
+
   const combinedOutput = (preprocessingData.agent1_output + ' ' + preprocessingData.agent2_output).toLowerCase();
-  
+
   // Positive indicators
   if (combinedOutput.includes('authentic') || combinedOutput.includes('genuine')) {
     scoreAdjustment += 0.1;
     indicators.push("OnDemand agents suggest authenticity");
   }
-  
+
   if (combinedOutput.includes('high quality') || combinedOutput.includes('professional')) {
     scoreAdjustment += 0.05;
   }
-  
+
   // Negative indicators
   if (combinedOutput.includes('suspicious') || combinedOutput.includes('anomal')) {
     scoreAdjustment -= 0.1;
     indicators.push("OnDemand agents detected suspicious patterns");
   }
-  
+
   if (combinedOutput.includes('manipulated') || combinedOutput.includes('artificial')) {
     scoreAdjustment -= 0.15;
     indicators.push("OnDemand agents suggest manipulation");
   }
-  
+
   return { scoreAdjustment, indicators };
 }
 
@@ -235,58 +235,58 @@ function analyzeExperienceConsistency(videoAnalysis, preprocessingData = null) {
 function extractConsistencyInsights(preprocessingData) {
   let scoreAdjustment = 0;
   const factors = [];
-  
+
   if (!preprocessingData) return { scoreAdjustment, factors };
-  
+
   const combinedOutput = (preprocessingData.agent1_output + ' ' + preprocessingData.agent2_output).toLowerCase();
-  
+
   // Positive consistency indicators
   if (combinedOutput.includes('consistent') || combinedOutput.includes('uniform')) {
     scoreAdjustment += 0.1;
     factors.push("OnDemand agents confirm consistency");
   }
-  
+
   if (combinedOutput.includes('stable') || combinedOutput.includes('smooth')) {
     scoreAdjustment += 0.05;
     factors.push("OnDemand agents detect stable characteristics");
   }
-  
+
   // Negative consistency indicators
   if (combinedOutput.includes('inconsistent') || combinedOutput.includes('irregular')) {
     scoreAdjustment -= 0.1;
     factors.push("OnDemand agents detect inconsistencies");
   }
-  
+
   if (combinedOutput.includes('artifact') || combinedOutput.includes('glitch')) {
     scoreAdjustment -= 0.05;
     factors.push("OnDemand agents detect artifacts");
   }
-  
+
   return { scoreAdjustment, factors };
 }
 
 /**
- * Enhanced analysis combining E-Raksha models with OnDemand agent capabilities
+ * Enhanced analysis combining Interceptor models with OnDemand agent capabilities
  */
 async function performEnhancedAnalysis(fileBuffer, filename, preprocessingData = null) {
   const startTime = Date.now();
-  
-  // Existing E-Raksha analysis
+
+  // Existing Interceptor analysis
   const videoAnalysis = analyzeVideoFile(fileBuffer, filename);
   const prediction = generatePrediction(videoAnalysis);
-  
+
   // Enhanced agent-like analysis (now with real OnDemand data if available)
   const perspectives = generateVideoPerspectives(videoAnalysis, prediction, preprocessingData);
   const authenticity = performAuthenticityCheck(videoAnalysis, filename, preprocessingData);
   const consistency = analyzeExperienceConsistency(videoAnalysis, preprocessingData);
-  
+
   // Combine all analysis results
   let combinedConfidence = prediction.confidence;
-  
+
   // If we have preprocessing data from OnDemand agents, factor it in
   if (preprocessingData) {
     console.log('Incorporating OnDemand agent insights...');
-    
+
     // Extract confidence adjustments from agent outputs
     const agentConfidenceAdjustment = calculateAgentConfidenceAdjustment(preprocessingData);
     combinedConfidence = (
@@ -324,11 +324,11 @@ async function performEnhancedAnalysis(fileBuffer, filename, preprocessingData =
       } : null,
       overallAssessment: {
         confidence: combinedConfidence,
-        recommendation: combinedConfidence > 0.7 ? "Likely authentic" : 
-                      combinedConfidence > 0.4 ? "Uncertain - requires human review" : 
-                      "Likely deepfake",
-        riskLevel: combinedConfidence > 0.7 ? "Low" : 
-                  combinedConfidence > 0.4 ? "Medium" : "High",
+        recommendation: combinedConfidence > 0.7 ? "Likely authentic" :
+          combinedConfidence > 0.4 ? "Uncertain - requires human review" :
+            "Likely deepfake",
+        riskLevel: combinedConfidence > 0.7 ? "Low" :
+          combinedConfidence > 0.4 ? "Medium" : "High",
         ondemandAgentsUsed: preprocessingData ? true : false
       }
     },
@@ -341,27 +341,27 @@ async function performEnhancedAnalysis(fileBuffer, filename, preprocessingData =
  */
 function calculateAgentConfidenceAdjustment(preprocessingData) {
   if (!preprocessingData) return 0.5;
-  
+
   let adjustment = 0.5; // neutral
-  
+
   // Analyze agent outputs for confidence indicators
   const agent1Output = preprocessingData.agent1_output?.toLowerCase() || '';
   const agent2Output = preprocessingData.agent2_output?.toLowerCase() || '';
-  
+
   // Look for positive authenticity indicators
   const positiveIndicators = ['authentic', 'real', 'genuine', 'original', 'legitimate'];
   const negativeIndicators = ['fake', 'manipulated', 'synthetic', 'artificial', 'deepfake'];
-  
+
   positiveIndicators.forEach(indicator => {
     if (agent1Output.includes(indicator)) adjustment += 0.1;
     if (agent2Output.includes(indicator)) adjustment += 0.1;
   });
-  
+
   negativeIndicators.forEach(indicator => {
     if (agent1Output.includes(indicator)) adjustment -= 0.1;
     if (agent2Output.includes(indicator)) adjustment -= 0.1;
   });
-  
+
   return Math.max(0.1, Math.min(0.9, adjustment));
 }
 
@@ -377,7 +377,7 @@ function analyzeVideoFile(fileBuffer, filename) {
   const brightness = 80 + (hashInt % 120);
   const contrast = 20 + (hashInt >> 8) % 60;
   const blurScore = 50 + (hashInt >> 16) % 100;
-  
+
   return {
     fps: 30, width: 1280, height: 720,
     frame_count: estimatedFrameCount, duration: estimatedDuration,
@@ -390,29 +390,29 @@ function generatePrediction(videoAnalysis) {
   const hashInt = parseInt(videoAnalysis.file_hash.slice(0, 8), 16);
   let baseScore = (hashInt % 1000) / 1000;
   const { brightness, contrast, blur_score: blur } = videoAnalysis;
-  
+
   let confidenceModifier = brightness < 80 ? 0.85 : brightness > 200 ? 0.9 : 1.0;
   let fakeBias = (contrast < 30 ? 0.1 : 0) + (blur < 50 ? 0.15 : 0);
-  
+
   let rawConfidence = 0.5 + (baseScore - 0.5) * 0.8 + fakeBias;
   rawConfidence = Math.max(0.1, Math.min(0.99, rawConfidence));
 
   const modelPredictions = {};
   let weightedSum = 0, totalWeight = 0;
-  
+
   Object.entries(MODELS).forEach(([key, info]) => {
     const modelVar = ((hashInt >> (key.charCodeAt(0) % 8)) % 100) / 500;
     let modelConf = rawConfidence + modelVar - 0.1;
     modelConf = Math.max(0.1, Math.min(0.99, modelConf));
     modelPredictions[info.name] = Math.round(modelConf * 10000) / 10000;
-    
+
     const weight = info.weight * info.accuracy * modelConf;
     weightedSum += modelConf * weight;
     totalWeight += weight;
   });
-  
+
   const finalConfidence = Math.max(0.1, Math.min(0.99, weightedSum / totalWeight));
-  
+
   return {
     is_fake: finalConfidence > 0.5,
     confidence: Math.round(finalConfidence * 10000) / 10000,
@@ -437,17 +437,17 @@ export default async function handler(req, res) {
 
     const fileBuffer = fs.readFileSync(file.filepath);
     const filename = file.originalFilename || 'video.mp4';
-    
+
     // Get preprocessing data from OnDemand agents (if available)
-    const preprocessingData = fields.preprocessing_data?.[0] 
-      ? JSON.parse(fields.preprocessing_data[0]) 
+    const preprocessingData = fields.preprocessing_data?.[0]
+      ? JSON.parse(fields.preprocessing_data[0])
       : null;
-    
+
     console.log('Preprocessing data received:', preprocessingData);
-    
+
     // Enhanced analysis with OnDemand agent insights
     const analysis = await performEnhancedAnalysis(fileBuffer, filename, preprocessingData);
-    
+
     // Determine models used
     let modelsUsed = ["BG-Model-N"];
     if (analysis.prediction.confidence < 0.85 && analysis.prediction.confidence > 0.15) {
@@ -467,7 +467,7 @@ export default async function handler(req, res) {
       confidence: analysis.prediction.confidence,
       faces_analyzed: Math.max(1, Math.floor(analysis.videoAnalysis.frame_count / 30)),
       models_used: modelsUsed,
-      
+
       // Enhanced analysis results
       enhanced_analysis: {
         perspectives: analysis.agentAnalysis.perspectives,
@@ -475,7 +475,7 @@ export default async function handler(req, res) {
         consistency_analysis: analysis.agentAnalysis.consistency,
         overall_assessment: analysis.agentAnalysis.overallAssessment
       },
-      
+
       analysis: {
         confidence_breakdown: {
           eraksha_confidence: analysis.prediction.confidence,
@@ -486,8 +486,8 @@ export default async function handler(req, res) {
           quality_score: Math.round(Math.min(analysis.videoAnalysis.brightness / 128, 1.0) * 10000) / 10000,
         },
         routing: {
-          confidence_level: analysis.prediction.confidence >= 0.85 || analysis.prediction.confidence <= 0.15 ? 'high' : 
-                           analysis.prediction.confidence >= 0.65 || analysis.prediction.confidence <= 0.35 ? 'medium' : 'low',
+          confidence_level: analysis.prediction.confidence >= 0.85 || analysis.prediction.confidence <= 0.15 ? 'high' :
+            analysis.prediction.confidence >= 0.65 || analysis.prediction.confidence <= 0.35 ? 'medium' : 'low',
           specialists_invoked: modelsUsed.length,
           risk_level: analysis.agentAnalysis.overallAssessment.riskLevel,
           recommendation: analysis.agentAnalysis.overallAssessment.recommendation,

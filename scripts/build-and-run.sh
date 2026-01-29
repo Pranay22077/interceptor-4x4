@@ -1,7 +1,7 @@
 #!/bin/bash
-# E-Raksha Quick Build and Run Script
+# Interceptor Quick Build and Run Script
 
-echo "[RUN] E-Raksha Quick Deployment"
+echo "[RUN] Interceptor Quick Deployment"
 echo "============================"
 
 # Check if Docker is installed
@@ -47,7 +47,7 @@ if lsof -Pi :3001 -sTCP:LISTEN -t >/dev/null ; then
 fi
 
 echo ""
-echo "[SETUP] Building and starting E-Raksha..."
+echo "[SETUP] Building and starting Interceptor..."
 echo "This may take 2-3 minutes on first run..."
 echo ""
 
@@ -55,6 +55,6 @@ echo ""
 docker-compose up --build
 
 echo ""
-echo "🛑 E-Raksha has been stopped."
+echo "🛑 Interceptor has been stopped."
 echo "To restart: docker-compose up"
 echo "To rebuild: docker-compose up --build"

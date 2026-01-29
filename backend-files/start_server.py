@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for E-Raksha Agentic Backend
+Startup script for Interceptor Agentic Backend
 Downloads models and starts the FastAPI server
 """
 
@@ -26,5 +26,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     host = os.environ.get("HOST", "0.0.0.0")
     
-    print(f"[STARTUP] Starting E-Raksha Agentic API on {host}:{port}")
+    print(f"[STARTUP] Starting Interceptor Agentic API on {host}:{port}")
     uvicorn.run(app, host=host, port=port, log_level="info")

@@ -19,12 +19,12 @@
             android:layout_height="80dp"
             android:src="@drawable/ic_shield"
             android:layout_marginBottom="16dp"
-            android:contentDescription="E-Raksha Logo" />
+            android:contentDescription="Interceptor Logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="E-Raksha"
+            android:text="Interceptor"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="#2c3e50"

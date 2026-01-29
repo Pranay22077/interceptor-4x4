@@ -1,7 +1,7 @@
 @echo off
-REM E-Raksha Windows Deployment Script
+REM Interceptor Windows Deployment Script
 
-echo E-Raksha Deployment Script
+echo Interceptor Deployment Script
 echo ================================
 
 REM Check if Docker is installed
@@ -20,7 +20,7 @@ docker stop eraksha-site >nul 2>&1
 docker rm eraksha-site >nul 2>&1
 
 REM Build new image
-echo Building E-Raksha image...
+echo Building Interceptor image...
 docker build -t eraksha-site -f docker/Dockerfile .
 
 if %errorlevel% neq 0 (
@@ -32,7 +32,7 @@ if %errorlevel% neq 0 (
 echo Image built successfully
 
 REM Run container
-echo Starting E-Raksha container...
+echo Starting Interceptor container...
 docker run -d -p 8080:80 --name eraksha-site eraksha-site
 
 if %errorlevel% neq 0 (

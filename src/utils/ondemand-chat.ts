@@ -1,5 +1,5 @@
 /**
- * OnDemand Chat Service for E-Raksha Chatbot
+ * OnDemand Chat Service for Interceptor Chatbot
  * Integrates with OnDemand.io Chat API for intelligent responses
  */
 
@@ -61,7 +61,7 @@ export class OnDemandChatService {
         body: JSON.stringify({
           agentId: this.agentId,
           context: {
-            system: "You are an AI assistant for E-Raksha, a deepfake detection platform. You help users understand their video analysis results, explain how the agentic workflow works, and provide insights about deepfake detection. You have access to analysis results from multiple specialist models and OnDemand agents."
+            system: "You are an AI assistant for Interceptor, a deepfake detection platform. You help users understand their video analysis results, explain how the agentic workflow works, and provide insights about deepfake detection. You have access to analysis results from multiple specialist models and OnDemand agents."
           }
         })
       });
@@ -84,7 +84,7 @@ export class OnDemandChatService {
    * Send a message to the OnDemand chat API
    */
   async sendMessage(
-    userMessage: string, 
+    userMessage: string,
     analysisContext?: AnalysisContext
   ): Promise<ChatResponse> {
     try {
@@ -97,7 +97,7 @@ export class OnDemandChatService {
       const contextualPrompt = this.buildContextualPrompt(userMessage, analysisContext);
 
       const endpoint = 'https://api.on-demand.io/chat/v1/sessions/query';
-      
+
       const payload = {
         agentId: this.agentId,
         sessionId: this.sessionId,
@@ -139,7 +139,7 @@ export class OnDemandChatService {
 
     } catch (error) {
       console.error('OnDemand chat error:', error);
-      
+
       // Fallback response
       return {
         success: false,
@@ -161,11 +161,11 @@ export class OnDemandChatService {
       prompt += `- Result: ${analysisContext.prediction.toUpperCase()} (${(analysisContext.confidence * 100).toFixed(1)}% confidence)\n`;
       prompt += `- Models Used: ${analysisContext.models_used.join(', ')}\n`;
       prompt += `- Processing Time: ${analysisContext.processing_time}s\n`;
-      
+
       if (analysisContext.enhanced_by_agents && analysisContext.ondemand_analysis) {
         prompt += `- Enhanced by OnDemand Agents: Yes\n`;
         prompt += `- Agents Used: ${analysisContext.ondemand_analysis.agents_used}\n`;
-        
+
         if (analysisContext.ondemand_analysis.agent_insights) {
           prompt += `\nAgent Insights:\n`;
           prompt += `- Quality Analysis: ${analysisContext.ondemand_analysis.agent_insights.agent1}\n`;
@@ -173,10 +173,10 @@ export class OnDemandChatService {
           prompt += `- Content Analysis: ${analysisContext.ondemand_analysis.agent_insights.agent3}\n`;
         }
       }
-      
+
       prompt += `\nPlease provide a helpful response about this analysis result. Be specific about the findings and explain what they mean for the user.`;
     } else {
-      prompt += `Context: The user is asking a general question about E-Raksha's deepfake detection system or agentic workflow. Please provide helpful information about how our system works, what our OnDemand agents do, or general guidance about deepfake detection.`;
+      prompt += `Context: The user is asking a general question about Interceptor's deepfake detection system or agentic workflow. Please provide helpful information about how our system works, what our OnDemand agents do, or general guidance about deepfake detection.`;
     }
 
     return prompt;
@@ -192,7 +192,7 @@ export class OnDemandChatService {
       if (lowerMessage.includes('result') || lowerMessage.includes('mean')) {
         return `Based on your analysis of "${analysisContext.filename}", our system detected this video as ${analysisContext.prediction.toUpperCase()} with ${(analysisContext.confidence * 100).toFixed(1)}% confidence. ${analysisContext.enhanced_by_agents ? 'This analysis was enhanced by our OnDemand agents for more accurate detection.' : 'The analysis used our specialist models for detection.'}`;
       }
-      
+
       if (lowerMessage.includes('agent') || lowerMessage.includes('ondemand')) {
         if (analysisContext.enhanced_by_agents && analysisContext.ondemand_analysis) {
           return `Our OnDemand agents provided additional insights for your video analysis:\n\n• Quality Analysis: Assessed video technical quality\n• Metadata Analysis: Examined file metadata patterns\n• Content Analysis: Analyzed visual content for anomalies\n\nThese agents helped achieve a confidence score of ${(analysisContext.confidence * 100).toFixed(1)}%.`;
@@ -200,7 +200,7 @@ export class OnDemandChatService {
           return `Your analysis wasn't processed by OnDemand agents, but our specialist models (${analysisContext.models_used.join(', ')}) provided the detection result.`;
         }
       }
-      
+
       if (lowerMessage.includes('confidence') || lowerMessage.includes('sure')) {
         return `The confidence score of ${(analysisContext.confidence * 100).toFixed(1)}% indicates ${analysisContext.confidence > 0.8 ? 'high' : analysisContext.confidence > 0.6 ? 'moderate' : 'lower'} certainty in the ${analysisContext.prediction} classification. ${analysisContext.enhanced_by_agents ? 'OnDemand agents helped refine this confidence score.' : ''}`;
       }
@@ -208,7 +208,7 @@ export class OnDemandChatService {
 
     // General fallback responses
     if (lowerMessage.includes('how') && lowerMessage.includes('work')) {
-      return `E-Raksha uses an agentic workflow with multiple specialist models and OnDemand agents to detect deepfakes. The system analyzes video quality, metadata, and content patterns to provide accurate detection results.`;
+      return `Interceptor uses an agentic workflow with multiple specialist models and OnDemand agents to detect deepfakes. The system analyzes video quality, metadata, and content patterns to provide accurate detection results.`;
     }
 
     if (lowerMessage.includes('agent')) {
@@ -223,7 +223,7 @@ export class OnDemandChatService {
    */
   async testConnection(): Promise<boolean> {
     try {
-      const response = await this.sendMessage("Hello, can you help me understand how E-Raksha works?");
+      const response = await this.sendMessage("Hello, can you help me understand how Interceptor works?");
       return response.success;
     } catch (error) {
       console.error('Connection test failed:', error);

@@ -1,7 +1,7 @@
 #!/bin/bash
-# E-Raksha Linux/macOS Deployment Script
+# Interceptor Linux/macOS Deployment Script
 
-echo "E-Raksha Deployment Script"
+echo "Interceptor Deployment Script"
 echo "================================"
 
 # Check if Docker is installed
@@ -18,7 +18,7 @@ docker stop eraksha-site 2>/dev/null || true
 docker rm eraksha-site 2>/dev/null || true
 
 # Build new image
-echo "Building E-Raksha image..."
+echo "Building Interceptor image..."
 docker build -t eraksha-site -f docker/Dockerfile .
 
 if [ $? -ne 0 ]; then
@@ -29,7 +29,7 @@ fi
 echo "Image built successfully"
 
 # Run container
-echo "Starting E-Raksha container..."
+echo "Starting Interceptor container..."
 docker run -d -p 8080:80 --name eraksha-site eraksha-site
 
 if [ $? -ne 0 ]; then

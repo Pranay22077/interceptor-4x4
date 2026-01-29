@@ -1,6 +1,5 @@
 # INTERCEPTOR: Agentic Deepfake Detection System
 
-
 ## Problem Statement
 
 The proliferation of AI-generated deepfakes poses severe threats across multiple domains:

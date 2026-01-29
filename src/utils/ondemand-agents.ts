@@ -1,6 +1,6 @@
 /**
  * OnDemand.io Agents Integration
- * Specific agent implementations for E-Raksha deepfake detection
+ * Specific agent implementations for Interceptor deepfake detection
  */
 
 import { getOnDemandClient, AgentResponse } from './ondemand-client';
@@ -55,7 +55,7 @@ export async function analyzeVideoWithPerspectives(
 ): Promise<VideoAnalysisResult | null> {
   try {
     const client = getOnDemandClient();
-    
+
     // Format input for the perspective generation agent
     const agentInput = {
       video_data: input.videoBase64 || input.videoUrl,
@@ -99,7 +99,7 @@ export async function checkMediaAuthenticity(
 ): Promise<MediaAuthenticityResult | null> {
   try {
     const client = getOnDemandClient();
-    
+
     if (!AGENT_IDS.MEDIA_AUTHENTICITY) {
       console.warn('Media authenticity agent ID not configured');
       return null;
@@ -146,7 +146,7 @@ export async function analyzeConsistency(
 ): Promise<ConsistencyAnalysisResult | null> {
   try {
     const client = getOnDemandClient();
-    
+
     if (!AGENT_IDS.EXPERIENCE_CONSISTENCY) {
       console.warn('Experience consistency agent ID not configured');
       return null;
@@ -196,7 +196,7 @@ export async function runComprehensiveAnalysis(
   processingTime: number;
 }> {
   const startTime = Date.now();
-  
+
   // Run agents in parallel where possible
   const [videoAnalysis, authenticity, consistency] = await Promise.all([
     analyzeVideoWithPerspectives(input),

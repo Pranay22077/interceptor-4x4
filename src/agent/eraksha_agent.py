@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-E-Raksha Unified Agentic Deepfake Detection System
+Interceptor Unified Agentic Deepfake Detection System
 
 This module implements the core agent system that intelligently routes
 video analysis through multiple specialist models for optimal deepfake detection.
 
-Author: E-Raksha Team
+Author: Interceptor Team
 Created: Initial development phase
 """
 
@@ -132,7 +132,7 @@ class VideoCharacteristics:
 
 class ErakshAgent:
     """
-    Advanced E-Raksha Agentic System with Dynamic Ensemble Intelligence
+    Advanced Interceptor Agentic System with Dynamic Ensemble Intelligence
     
     Features:
     - Dynamic ensemble weights that adapt based on video characteristics
@@ -149,7 +149,7 @@ class ErakshAgent:
         else:
             self.device = torch.device(device)
         
-        print(f"[INIT] Initializing Advanced E-Raksha Agentic System on {self.device}")
+        print(f"[INIT] Initializing Advanced Interceptor Agentic System on {self.device}")
         
         # Enhanced configuration with dynamic weights
         self.config = {
@@ -174,7 +174,7 @@ class ErakshAgent:
         # Load all optimized models
         self.models = self._load_all_models()
         
-        print("[OK] Advanced E-Raksha Agent initialized successfully!")
+        print("[OK] Advanced Interceptor Agent initialized successfully!")
         self._print_model_status()
     
     def _load_all_models(self) -> Dict[str, Any]:
@@ -706,7 +706,7 @@ class ErakshAgent:
 
 def main():
     """Test the unified agentic system"""
-    print("[INIT] E-Raksha Unified Agentic System")
+    print("[INIT] Interceptor Unified Agentic System")
     print("=" * 60)
     
     # Create agent
@@ -743,7 +743,7 @@ def main():
         print("[WARNING] No test videos found")
         print("[OK] Agent initialized successfully and ready for use!")
     
-    print(f"\n[DONE] E-Raksha Agentic System Ready!")
+    print(f"\n[DONE] Interceptor Agentic System Ready!")
 
 if __name__ == "__main__":
     main()
