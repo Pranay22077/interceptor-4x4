@@ -1,0 +1,20 @@
+# Python backend files (deployed to Render.com, not Vercel)
+requirements.txt
+setup.py
+backend-files/
+app/
+models/
+Dockerfile
+docker/
+docker-compose.yml
+render.yaml
+
+# Test and documentation files
+tests/
+docs/
+scripts/
+archive/
+export/
+
+# Config files not needed for frontend
+*.py
