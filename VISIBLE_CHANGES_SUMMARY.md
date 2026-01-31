@@ -10,7 +10,7 @@ The changes have been committed and pushed. After Vercel deployment completes, y
 
 ### **NEW: Green Banner**
 - **Location**: Top of home page, under the main title
-- **Text**: "NEW: Deterministic Routing - Judge Feedback Addressed"
+- **Text**: "🎯 NEW: Deterministic Routing - Judge Feedback Addressed"
 - **Purpose**: Shows judges we responded to their feedback
 
 ### **Updated Description**
@@ -25,27 +25,27 @@ The changes have been committed and pushed. After Vercel deployment completes, y
 After analyzing any video, you'll see a **prominent blue panel** with:
 
 #### **Header Section**
-- **"Deterministic Routing Explanation"** title
+- 🛡️ **"Deterministic Routing Explanation"** title
 - **Green "DETERMINISTIC" badge**
 - **"Judge Feedback Addressed"** subtitle
 
 #### **Consistency Guarantee Box**
-- **Green box** with checkmark
+- ✅ **Green box** with checkmark
 - **"Forensic Consistency Guarantee"**
 - **"This routing decision will be identical for this file every time - suitable for legal proceedings"**
 
 #### **Models Selected Section**
-- **"Models Selected (X specialists)"** header
+- ⚡ **"Models Selected (X specialists)"** header
 - **Grid of model cards** with icons:
-  - BG-Model - Background Analysis
-  - CM-Model - Compression Detection
-  - LL-Model - Low-Light Analysis
-  - AV-Model - Audio-Visual Sync
-  - RR-Model - Resolution Consistency
-  - TM-Model - Temporal Analysis
+  - 🎯 BG-Model - Background Analysis
+  - 📦 CM-Model - Compression Detection
+  - 🌙 LL-Model - Low-Light Analysis
+  - 🎵 AV-Model - Audio-Visual Sync
+  - 📐 RR-Model - Resolution Consistency
+  - ⏱️ TM-Model - Temporal Analysis
 
 #### **Routing Reasons Section**
-- **"Why These Models Were Selected"** header
+- ℹ️ **"Why These Models Were Selected"** header
 - **Bullet points** explaining routing decisions:
   - File characteristics analyzed
   - Deterministic routing based on file size
@@ -64,7 +64,7 @@ After analyzing any video, you'll see a **prominent blue panel** with:
 
 ---
 
-## **Demo Flow**
+## **🎬 Demo Flow**
 
 ### **What Judges Will See**
 1. **Upload video** → Normal analysis process
@@ -81,7 +81,7 @@ After analyzing any video, you'll see a **prominent blue panel** with:
 
 ---
 
-## **Deployment Status**
+## **🚀 Deployment Status**
 
 ### **Git Status**
 - ✅ **Changes committed**: 3 files modified
@@ -95,7 +95,7 @@ After analyzing any video, you'll see a **prominent blue panel** with:
 
 ---
 
-## **When You'll See Changes**
+## **⏰ When You'll See Changes**
 
 ### **Timeline**
 1. **Now**: Changes pushed to GitHub ✅
@@ -110,7 +110,7 @@ After analyzing any video, you'll see a **prominent blue panel** with:
 
 ---
 
-## **Judge Presentation Ready**
+## **🎯 Judge Presentation Ready**
 
 ### **Key Messages**
 - ✅ **"We listened to your feedback"** - Green banner on home page
