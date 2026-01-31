@@ -58,13 +58,8 @@ const Home = () => {
             <span className="text-gray-900 dark:text-white">Authenticity </span>
             <span className="text-blue-600 dark:text-blue-400">Analysis</span>
           </h1>
-          <div className="mb-4 px-4 py-2 bg-green-100 border border-green-300 rounded-lg inline-block">
-            <p className="text-sm font-semibold text-green-800">
-              🎯 NEW: Deterministic Routing - Judge Feedback Addressed
-            </p>
-          </div>
           <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            AI-assisted analysis to detect deepfakes with <strong>deterministic routing</strong> - same video always routes to same specialists for forensic consistency.
+            AI-assisted analysis to detect deepfakes with deterministic routing - same video always routes to same specialists for forensic consistency.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link
