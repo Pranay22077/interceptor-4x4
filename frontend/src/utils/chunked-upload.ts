@@ -45,7 +45,7 @@ export class ChunkedUploader {
     } = {}
   ) {
     this.file = file;
-    this.chunkSize = options.chunkSize || 5 * 1024 * 1024; // 5MB default
+    this.chunkSize = options.chunkSize || 3 * 1024 * 1024; // 3MB default to stay under Vercel limits
     this.apiUrl = options.apiUrl || '/api/upload-chunked';
     this.onProgress = options.onProgress;
   }
@@ -93,7 +93,18 @@ export class ChunkedUploader {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP ${response.status}`);
+        let errorMessage = errorData.error || `HTTP ${response.status}`;
+        
+        // Provide specific error messages for common issues
+        if (response.status === 413) {
+          errorMessage = `Chunk too large (${(chunk.size / (1024 * 1024)).toFixed(1)}MB). Try reducing chunk size.`;
+        } else if (response.status === 500) {
+          errorMessage = 'Server error processing chunk. Please try again.';
+        } else if (response.status === 429) {
+          errorMessage = 'Too many requests. Please wait and try again.';
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
