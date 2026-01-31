@@ -195,16 +195,16 @@ const AnalysisWorkbench = () => {
     setProgress(5);
 
     const uploader = new ChunkedUploader(selectedFile, {
-      chunkSize: 5 * 1024 * 1024, // 5MB chunks
+      chunkSize: 3 * 1024 * 1024, // 3MB chunks to stay under Vercel limits
       apiUrl: '/api/upload-chunked',
       onProgress: (progress: ChunkUploadProgress) => {
         setChunkProgress(progress);
         
         // Update processing stage based on progress
         if (progress.chunkIndex === 0 && progress.chunkProgress < 100) {
-          setProcessingStage('Uploading Video Chunks');
+          setProcessingStage('Uploading Video in Chunks');
         } else if (progress.chunkProgress === 100) {
-          setProcessingStage(`Processing Chunk ${progress.chunkIndex + 1}/${progress.totalChunks}`);
+          setProcessingStage(`Analyzing Chunk ${progress.chunkIndex + 1}/${progress.totalChunks}`);
           
           // Store chunk result if available
           if (progress.chunkResult) {
@@ -216,8 +216,8 @@ const AnalysisWorkbench = () => {
           }
         }
         
-        // Update overall progress (upload is 50% of total, processing is 50%)
-        const uploadProgress = progress.overallProgress * 0.5;
+        // Update overall progress (upload is 40% of total, chunk processing is 50%, final aggregation is 10%)
+        const uploadProgress = progress.overallProgress * 0.4;
         const processingProgress = (progress.chunkIndex / progress.totalChunks) * 50;
         setProgress(5 + uploadProgress + processingProgress);
       }
@@ -572,7 +572,7 @@ const AnalysisWorkbench = () => {
             Video Analysis
           </h1>
           <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-            Upload your video for instant deepfake detection. Supports MP4, AVI, MOV, and WebM up to 100MB.
+            Upload your video for instant deepfake detection. Supports MP4, AVI, MOV, and WebM up to 100MB. Large files are processed in chunks for better reliability.
           </p>
         </div>
 
@@ -604,7 +604,7 @@ const AnalysisWorkbench = () => {
                 </p>
                 {shouldUseChunkedUpload(selectedFile, CHUNKED_UPLOAD_THRESHOLD) && (
                   <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                    Large file - will use chunked upload
+                    Large file ({formatFileSize(selectedFile.size)}) - will be processed in 3MB chunks for optimal analysis
                   </p>
                 )}
               </div>
@@ -615,7 +615,7 @@ const AnalysisWorkbench = () => {
                   Drag and drop your video or click to browse
                 </p>
                 <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  Maximum file size: 100MB
+                  Maximum file size: 100MB • Large files processed in chunks
                 </p>
               </div>
             )}
@@ -705,24 +705,42 @@ const AnalysisWorkbench = () => {
                   {chunkProgress && uploadMethod === 'chunked' && (
                     <div className="mt-2 space-y-1">
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Chunk {chunkProgress.chunkIndex + 1}/{chunkProgress.totalChunks} • 
-                        {formatFileSize(chunkProgress.uploadedBytes)} / {formatFileSize(chunkProgress.totalBytes)}
+                        Processing chunk {chunkProgress.chunkIndex + 1} of {chunkProgress.totalChunks} • 
+                        {formatFileSize(chunkProgress.uploadedBytes)} / {formatFileSize(chunkProgress.totalBytes)} uploaded
                         {uploadStartTime > 0 && chunkProgress.uploadedBytes > 0 && (
                           <span className="ml-2">
-                            {calculateETA(chunkProgress.uploadedBytes, chunkProgress.totalBytes, uploadStartTime)}
+                            • {calculateETA(chunkProgress.uploadedBytes, chunkProgress.totalBytes, uploadStartTime)}
                           </span>
                         )}
                       </p>
                       {chunkProgress.chunkResult && (
                         <p className="text-xs text-gray-600 dark:text-gray-400">
-                          Chunk result: {chunkProgress.chunkResult.prediction} ({(chunkProgress.chunkResult.confidence * 100).toFixed(1)}%)
+                          Chunk {chunkProgress.chunkIndex + 1} result: {chunkProgress.chunkResult.prediction} 
+                          ({(chunkProgress.chunkResult.confidence * 100).toFixed(1)}% confidence, 
+                          {chunkProgress.chunkResult.models_used?.length || 1} models used)
                         </p>
+                      )}
+                      {chunkResults.length > 0 && (
+                        <div className="mt-2 p-2 bg-gray-50/50 dark:bg-gray-800/50 rounded text-xs">
+                          <p className="text-gray-700 dark:text-gray-300 mb-1">Chunk Results So Far:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {chunkResults.map((result, idx) => (
+                              <span key={idx} className={`px-2 py-1 rounded text-xs ${
+                                result?.prediction === 'fake' 
+                                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                              }`}>
+                                #{idx + 1}: {result?.prediction || 'processing...'}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}
                   {uploadMethod === 'chunked' && uploadSpeed > 0 && progress < 50 && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Processing large video in chunks: {formatFileSize(uploadSpeed)}/s
+                      Processing entire video in 3MB chunks: {formatFileSize(uploadSpeed)}/s
                     </p>
                   )}
                 </div>
