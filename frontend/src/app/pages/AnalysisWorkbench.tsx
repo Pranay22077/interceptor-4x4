@@ -226,8 +226,8 @@ const AnalysisWorkbench = () => {
     activateModel('frame-sampler');
     setProgress(15);
 
-    // Make API call to deterministic routing endpoint
-    const response = await fetch(`${API_URL}/predict-deterministic`, {
+    // Make API call to updated deterministic endpoint
+    const response = await fetch(`${API_URL}/predict`, {
       method: 'POST',
       body: formData,
     });
