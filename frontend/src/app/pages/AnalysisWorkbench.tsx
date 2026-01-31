@@ -5,7 +5,6 @@ import { useArchitecture } from '../context/ArchitectureContext';
 import { useTheme } from '../context/ThemeContext';
 import SystemArchitectureCanvas from '../components/SystemArchitectureCanvas';
 import RoutingExplanation from '../components/RoutingExplanation';
-
 import { saveAnalysis, checkDuplicateFile, type VideoAnalysis } from '../../utils/supabase';
 import { saveAnalysisLocally } from '../../utils/local-storage-analysis';
 
