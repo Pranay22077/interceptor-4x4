@@ -86,10 +86,6 @@ const FAQ = () => {
       q: 'What is the technology stack?',
       a: 'PyTorch for neural networks, LangGraph for agentic orchestration, FastAPI for backend, React for frontend, MTCNN for face detection, and Docker for deployment. ResNet18-based architectures with knowledge distillation.',
     },
-    {
-      q: 'Who built Interceptor?',
-      a: 'Interceptor was developed by a multidisciplinary team for the E-Raksha Hackathon 2026 (Problem Statement II) - National Cyber Challenge by eDC IIT Delhi in collaboration with CyberPeace.',
-    },
   ];
 
   const toggleQuestion = (index: number) => {
