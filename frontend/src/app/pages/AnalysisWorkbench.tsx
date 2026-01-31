@@ -7,20 +7,19 @@ import SystemArchitectureCanvas from '../components/SystemArchitectureCanvas';
 import RoutingExplanation from '../components/RoutingExplanation';
 import { saveAnalysis, checkDuplicateFile, type VideoAnalysis } from '../../utils/supabase';
 import { saveAnalysisLocally } from '../../utils/local-storage-analysis';
+import { ChunkedUploader, shouldUseChunkedUpload, formatBytes, calculateETA, type ChunkUploadProgress } from '../../utils/chunked-upload';
 
 // Backend API URL - Always use Vercel serverless API
 const API_URL = '/api';
 
-// File size threshold for large video processing (10MB)
-const LARGE_FILE_THRESHOLD = 10 * 1024 * 1024;
+// File size threshold for chunked upload (10MB)
+const CHUNKED_UPLOAD_THRESHOLD = 10 * 1024 * 1024;
+// Maximum supported file size (100MB)
+const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
 // Helper function to format file sizes
-const formatBytes = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+const formatFileSize = (bytes: number): string => {
+  return formatBytes(bytes);
 };
 
 const AnalysisWorkbench = () => {
@@ -34,6 +33,11 @@ const AnalysisWorkbench = () => {
   const [duplicateResult, setDuplicateResult] = useState<any>(null);
   const [uploadMethod, setUploadMethod] = useState<'direct' | 'chunked'>('direct');
   const [uploadSpeed, setUploadSpeed] = useState<number>(0);
+  
+  // Chunked upload specific state
+  const [chunkProgress, setChunkProgress] = useState<ChunkUploadProgress | null>(null);
+  const [uploadStartTime, setUploadStartTime] = useState<number>(0);
+  const [chunkResults, setChunkResults] = useState<any[]>([]);
 
   // Refs for scroll targets
   const animationRef = useRef<HTMLDivElement>(null);
@@ -84,7 +88,16 @@ const AnalysisWorkbench = () => {
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files[0]) {
-      setSelectedFile(files[0]);
+      const file = files[0];
+      
+      // Check file size limit
+      if (file.size > MAX_FILE_SIZE) {
+        setError(`File size (${formatFileSize(file.size)}) exceeds maximum limit of ${formatFileSize(MAX_FILE_SIZE)}`);
+        return;
+      }
+      
+      setSelectedFile(file);
+      setError(null);
     }
   }, []);
 
@@ -97,11 +110,14 @@ const AnalysisWorkbench = () => {
     setIsDuplicate(false);
     setDuplicateResult(null);
     setUploadSpeed(0);
+    setChunkProgress(null);
+    setChunkResults([]);
+    setUploadStartTime(Date.now());
     resetFlow();
 
     // Determine upload method based on file size
-    const isLargeFile = selectedFile.size > LARGE_FILE_THRESHOLD;
-    setUploadMethod(isLargeFile ? 'clip' : 'direct');
+    const useChunkedUpload = shouldUseChunkedUpload(selectedFile, CHUNKED_UPLOAD_THRESHOLD);
+    setUploadMethod(useChunkedUpload ? 'chunked' : 'direct');
 
     try {
       // FIRST: Check if file was previously analyzed
@@ -144,15 +160,13 @@ const AnalysisWorkbench = () => {
       // File is new - proceed with analysis
       let result;
 
-      if (selectedFile.size > LARGE_FILE_THRESHOLD) {
-        // Use clip extraction for large files
-        console.log(`Using clip extraction for ${formatBytes(selectedFile.size)} file`);
-        setUploadMethod('clip');
-        result = await analyzeLargeVideo();
+      if (useChunkedUpload) {
+        // Use chunked upload for large files
+        console.log(`Using chunked upload for ${formatFileSize(selectedFile.size)} file`);
+        result = await analyzeVideoChunked();
       } else {
         // Use direct upload for small files
-        console.log(`Using direct upload for ${formatBytes(selectedFile.size)} file`);
-        setUploadMethod('direct');
+        console.log(`Using direct upload for ${formatFileSize(selectedFile.size)} file`);
         result = await analyzeVideoDirect();
       }
 
@@ -172,7 +186,59 @@ const AnalysisWorkbench = () => {
   };
 
   /**
-   * Analyze large video using clip extraction (for files > 10MB)
+   * Analyze video using chunked upload (for files > 10MB)
+   */
+  const analyzeVideoChunked = async () => {
+    if (!selectedFile) return null;
+
+    setProcessingStage('Preparing Chunked Upload');
+    setProgress(5);
+
+    const uploader = new ChunkedUploader(selectedFile, {
+      chunkSize: 5 * 1024 * 1024, // 5MB chunks
+      apiUrl: '/api/upload-chunked',
+      onProgress: (progress: ChunkUploadProgress) => {
+        setChunkProgress(progress);
+        
+        // Update processing stage based on progress
+        if (progress.chunkIndex === 0 && progress.chunkProgress < 100) {
+          setProcessingStage('Uploading Video Chunks');
+        } else if (progress.chunkProgress === 100) {
+          setProcessingStage(`Processing Chunk ${progress.chunkIndex + 1}/${progress.totalChunks}`);
+          
+          // Store chunk result if available
+          if (progress.chunkResult) {
+            setChunkResults(prev => {
+              const newResults = [...prev];
+              newResults[progress.chunkIndex] = progress.chunkResult;
+              return newResults;
+            });
+          }
+        }
+        
+        // Update overall progress (upload is 50% of total, processing is 50%)
+        const uploadProgress = progress.overallProgress * 0.5;
+        const processingProgress = (progress.chunkIndex / progress.totalChunks) * 50;
+        setProgress(5 + uploadProgress + processingProgress);
+      }
+    });
+
+    try {
+      const result = await uploader.upload();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Chunked upload failed');
+      }
+
+      return result.result;
+    } catch (error) {
+      console.error('Chunked upload error:', error);
+      throw error;
+    }
+  };
+
+  /**
+   * Analyze large video using clip extraction (for files > 10MB) - Legacy method
    */
   const analyzeLargeVideo = async () => {
     if (!selectedFile) return null;
@@ -466,6 +532,9 @@ const AnalysisWorkbench = () => {
     setError(null);
     setIsDuplicate(false);
     setDuplicateResult(null);
+    setChunkProgress(null);
+    setChunkResults([]);
+    setUploadStartTime(0);
     resetFlow();
   };
 
@@ -531,8 +600,13 @@ const AnalysisWorkbench = () => {
                 <FileVideo className="w-12 h-12 sm:w-16 sm:h-16 text-blue-600 dark:text-blue-400 mb-3 sm:mb-4" />
                 <p className="text-base sm:text-lg text-gray-900 dark:text-white mb-2">{selectedFile.name}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                  {formatFileSize(selectedFile.size)}
                 </p>
+                {shouldUseChunkedUpload(selectedFile, CHUNKED_UPLOAD_THRESHOLD) && (
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                    Large file - will use chunked upload
+                  </p>
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center">
@@ -628,9 +702,27 @@ const AnalysisWorkbench = () => {
                     <span>{progress}%</span>
                   </div>
                   <Progress value={progress} className="h-2" />
-                  {uploadMethod === 'clip' && uploadSpeed > 0 && progress < 50 && (
+                  {chunkProgress && uploadMethod === 'chunked' && (
+                    <div className="mt-2 space-y-1">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Chunk {chunkProgress.chunkIndex + 1}/{chunkProgress.totalChunks} • 
+                        {formatFileSize(chunkProgress.uploadedBytes)} / {formatFileSize(chunkProgress.totalBytes)}
+                        {uploadStartTime > 0 && chunkProgress.uploadedBytes > 0 && (
+                          <span className="ml-2">
+                            {calculateETA(chunkProgress.uploadedBytes, chunkProgress.totalBytes, uploadStartTime)}
+                          </span>
+                        )}
+                      </p>
+                      {chunkProgress.chunkResult && (
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
+                          Chunk result: {chunkProgress.chunkResult.prediction} ({(chunkProgress.chunkResult.confidence * 100).toFixed(1)}%)
+                        </p>
+                      )}
+                    </div>
+                  )}
+                  {uploadMethod === 'chunked' && uploadSpeed > 0 && progress < 50 && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      Processing large video: {formatBytes(uploadSpeed)}/s
+                      Processing large video in chunks: {formatFileSize(uploadSpeed)}/s
                     </p>
                   )}
                 </div>
@@ -778,13 +870,62 @@ const AnalysisWorkbench = () => {
                 )}
               </div>
 
-              <div className="bg-blue-50/50 dark:bg-blue-900/20 backdrop-blur-md rounded-xl p-4">
+              <div className="bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-md rounded-xl p-4">
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Explanation
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {analysisResult.explanation}
                 </p>
+                
+                {/* Show chunked analysis breakdown if available */}
+                {analysisResult.raw_result?.chunked_analysis && (
+                  <div className="mt-4 p-3 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
+                      Chunked Analysis Breakdown
+                    </p>
+                    <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <strong className="text-gray-700 dark:text-gray-300">Total Chunks:</strong>
+                          <p>{analysisResult.raw_result.chunked_analysis.total_chunks}</p>
+                        </div>
+                        <div>
+                          <strong className="text-gray-700 dark:text-gray-300">File Size:</strong>
+                          <p>{analysisResult.raw_result.chunked_analysis.file_size_mb}MB</p>
+                        </div>
+                        <div>
+                          <strong className="text-gray-700 dark:text-gray-300">Fake Chunks:</strong>
+                          <p>{analysisResult.raw_result.chunked_analysis.chunks_fake}</p>
+                        </div>
+                        <div>
+                          <strong className="text-gray-700 dark:text-gray-300">Real Chunks:</strong>
+                          <p>{analysisResult.raw_result.chunked_analysis.chunks_real}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Chunk-by-chunk breakdown */}
+                      <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <strong className="text-gray-700 dark:text-gray-300">Individual Chunk Results:</strong>
+                        <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                          {analysisResult.raw_result.chunked_analysis.chunk_breakdown.map((chunk: any, index: number) => (
+                            <div key={index} className="flex justify-between items-center p-2 bg-white/50 dark:bg-gray-800/50 rounded text-xs">
+                              <span>Chunk {chunk.chunkIndex + 1} ({chunk.size})</span>
+                              <span className={`px-2 py-1 rounded ${
+                                chunk.prediction === 'fake' 
+                                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                                  : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
+                              }`}>
+                                {chunk.prediction} ({(chunk.confidence * 100).toFixed(1)}%)
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Show OnDemand agent insights if available */}
                 {analysisResult.raw_result?.ondemand_analysis?.agent_insights && (
