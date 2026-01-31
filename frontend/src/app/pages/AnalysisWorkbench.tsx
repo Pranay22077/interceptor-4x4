@@ -4,6 +4,7 @@ import { Progress } from '../components/ui/progress';
 import { useArchitecture } from '../context/ArchitectureContext';
 import { useTheme } from '../context/ThemeContext';
 import SystemArchitectureCanvas from '../components/SystemArchitectureCanvas';
+import RoutingExplanation from '../components/RoutingExplanation';
 
 import { saveAnalysis, checkDuplicateFile, type VideoAnalysis } from '../../utils/supabase';
 import { saveAnalysisLocally } from '../../utils/local-storage-analysis';
@@ -225,8 +226,8 @@ const AnalysisWorkbench = () => {
     activateModel('frame-sampler');
     setProgress(15);
 
-    // Make API call
-    const response = await fetch(`${API_URL}/predict`, {
+    // Make API call to deterministic routing endpoint
+    const response = await fetch(`${API_URL}/predict-deterministic`, {
       method: 'POST',
       body: formData,
     });
@@ -822,6 +823,9 @@ const AnalysisWorkbench = () => {
                   </div>
                 )}
               </div>
+
+              {/* NEW: Deterministic Routing Explanation */}
+              <RoutingExplanation routingExplanation={analysisResult.raw_result?.routing_explanation} />
             </div>
 
             <button
