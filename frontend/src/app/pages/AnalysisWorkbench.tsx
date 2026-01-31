@@ -611,9 +611,9 @@ const AnalysisWorkbench = () => {
                   Analyzing Video
                 </h2>
                 {/* OnDemand Agent Badge */}
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium text-green-700 dark:text-green-300">
+                <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full">
+                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                     OnDemand Agents Active
                   </span>
                 </div>
@@ -720,7 +720,7 @@ const AnalysisWorkbench = () => {
                   className={`w-16 h-16 rounded-full flex items-center justify-center ${
                     analysisResult.prediction === 'fake'
                       ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                      : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                   }`}
                 >
                   {analysisResult.prediction === 'fake' ? (
@@ -763,7 +763,7 @@ const AnalysisWorkbench = () => {
                       key={index}
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
                         model.includes('OnDemand') || model.includes('Agent')
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
+                          ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
                           : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
                       }`}
                     >
@@ -830,7 +830,7 @@ const AnalysisWorkbench = () => {
                     <span>🛡️</span>
                   </div>
                   <div>
-                    <h3 className="text-lg text-gray-900 dark:text-white">Deterministic Routing Explanation</h3>
+                    <h3 className="text-lg font-normal text-gray-900 dark:text-white">Deterministic Routing Explanation</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs">
                         DETERMINISTIC
@@ -840,10 +840,10 @@ const AnalysisWorkbench = () => {
                 </div>
 
                 {/* Consistency Guarantee */}
-                <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
+                <div className="bg-gray-50/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-gray-600 dark:text-gray-400">✅</span>
-                    <span className="text-gray-900 dark:text-white">Forensic Consistency Guarantee</span>
+                    <span className="font-normal text-gray-900 dark:text-white">Forensic Consistency Guarantee</span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     This routing decision will be identical for this file every time - suitable for legal proceedings
@@ -852,13 +852,13 @@ const AnalysisWorkbench = () => {
 
                 {/* Models Selected */}
                 <div className="mb-4">
-                  <h4 className="text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                  <h4 className="font-normal text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                     <span>⚡</span>
                     Models Selected ({analysisResult.models_used?.length || 1} specialists)
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {(analysisResult.models_used || ['BG-Model']).map((model, index) => (
-                      <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <div key={index} className="flex items-center gap-2 p-3 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                         <span className="text-lg">
                           {model.includes('BG') ? '🎯' : 
                            model.includes('CM') ? '📦' : 
@@ -868,7 +868,7 @@ const AnalysisWorkbench = () => {
                            model.includes('TM') ? '⏱️' : '🤖'}
                         </span>
                         <div>
-                          <p className="text-gray-900 dark:text-white">{model}</p>
+                          <p className="font-normal text-gray-900 dark:text-white">{model}</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
                             {model.includes('BG') ? 'Background Analysis' : 
                              model.includes('CM') ? 'Compression Detection' : 
@@ -885,7 +885,7 @@ const AnalysisWorkbench = () => {
 
                 {/* Routing Reasons */}
                 <div className="mb-4">
-                  <h4 className="text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                  <h4 className="font-normal text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                     <span>ℹ️</span>
                     Why These Models Were Selected
                   </h4>
@@ -906,8 +906,8 @@ const AnalysisWorkbench = () => {
                 </div>
 
                 {/* File Characteristics */}
-                <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
-                  <h4 className="text-gray-900 dark:text-white mb-3">Deterministic Signals Detected</h4>
+                <div className="bg-gray-50/50 dark:bg-gray-800/50 rounded-lg p-4">
+                  <h4 className="font-normal text-gray-900 dark:text-white mb-3">Deterministic Signals Detected</h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600 dark:text-gray-400">File Size:</span>
