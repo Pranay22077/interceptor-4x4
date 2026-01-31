@@ -36,8 +36,8 @@ const Home = () => {
     },
     {
       icon: <Eye className="w-6 h-6" />,
-      title: 'Intelligent Routing',
-      description: 'Smart agent routes videos to specialized models based on compression, lighting & temporal analysis',
+      title: 'Deterministic Routing',
+      description: 'Smart agent routes videos to specialized models based on file characteristics - same video = same routing every time',
     },
     {
       icon: <Zap className="w-6 h-6" />,
@@ -145,8 +145,8 @@ const Home = () => {
             {[
               { step: '1', title: 'Upload Video', desc: 'Upload your video file (MP4, AVI, MOV, WebM up to 100MB)' },
               { step: '2', title: 'Video Analysis', desc: 'Extract frames, detect faces, analyze audio & metadata' },
-              { step: '3', title: 'Agentic Routing', desc: 'LangGraph agent routes to specialist models (BG, AV, CM, RR, LL, TM)' },
-              { step: '4', title: 'Get Results', desc: 'Aggregated prediction with Grad-CAM heatmaps & explanations' },
+              { step: '3', title: 'Deterministic Routing', desc: 'Agent routes to specialist models based on file characteristics (100% reproducible)' },
+              { step: '4', title: 'Get Results', desc: 'Aggregated prediction with routing explanation & confidence scores' },
             ].map((item) => (
               <div key={item.step} className="text-center">
                 <div className="w-14 h-14 bg-blue-600 dark:bg-blue-500 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
