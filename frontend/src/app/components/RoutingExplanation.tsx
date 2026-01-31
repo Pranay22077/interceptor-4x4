@@ -43,16 +43,6 @@ export function RoutingExplanation({ routingExplanation }: RoutingExplanationPro
     deterministic_signals 
   } = routingExplanation;
 
-  const getSpecialistIcon = (specialist: string) => {
-    if (specialist.includes('BG')) return '🎯';
-    if (specialist.includes('CM')) return '📦';
-    if (specialist.includes('LL')) return '🌙';
-    if (specialist.includes('AV')) return '🎵';
-    if (specialist.includes('RR')) return '📐';
-    if (specialist.includes('TM')) return '⏱️';
-    return '🤖';
-  };
-
   const getSpecialistDescription = (specialist: string) => {
     if (specialist.includes('BG')) return 'Background Analysis';
     if (specialist.includes('CM')) return 'Compression Detection';
@@ -97,7 +87,6 @@ export function RoutingExplanation({ routingExplanation }: RoutingExplanationPro
                 key={index}
                 className="flex items-center gap-2 p-2 bg-gray-50/50 dark:bg-gray-800/50 rounded border border-gray-200 dark:border-gray-700"
               >
-                <span className="text-lg">{getSpecialistIcon(specialist)}</span>
                 <div>
                   <p className="text-sm font-normal text-gray-900 dark:text-white">{specialist}</p>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{getSpecialistDescription(specialist)}</p>

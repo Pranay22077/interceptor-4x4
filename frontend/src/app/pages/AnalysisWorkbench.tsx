@@ -826,9 +826,6 @@ const AnalysisWorkbench = () => {
               {/* NEW: Deterministic Routing Explanation - Subtle and consistent */}
               <div className="mt-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-6 h-6 text-gray-600 dark:text-gray-400">
-                    <span>🛡️</span>
-                  </div>
                   <div>
                     <h3 className="text-lg font-normal text-gray-900 dark:text-white">Deterministic Routing Explanation</h3>
                     <div className="flex items-center gap-2 mt-1">
@@ -842,7 +839,6 @@ const AnalysisWorkbench = () => {
                 {/* Consistency Guarantee */}
                 <div className="bg-gray-50/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-gray-600 dark:text-gray-400">✅</span>
                     <span className="font-normal text-gray-900 dark:text-white">Forensic Consistency Guarantee</span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -853,20 +849,11 @@ const AnalysisWorkbench = () => {
                 {/* Models Selected */}
                 <div className="mb-4">
                   <h4 className="font-normal text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span>⚡</span>
                     Models Selected ({analysisResult.models_used?.length || 1} specialists)
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {(analysisResult.models_used || ['BG-Model']).map((model, index) => (
                       <div key={index} className="flex items-center gap-2 p-3 bg-gray-50/50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <span className="text-lg">
-                          {model.includes('BG') ? '🎯' : 
-                           model.includes('CM') ? '📦' : 
-                           model.includes('LL') ? '🌙' : 
-                           model.includes('AV') ? '🎵' : 
-                           model.includes('RR') ? '📐' : 
-                           model.includes('TM') ? '⏱️' : '🤖'}
-                        </span>
                         <div>
                           <p className="font-normal text-gray-900 dark:text-white">{model}</p>
                           <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -886,7 +873,6 @@ const AnalysisWorkbench = () => {
                 {/* Routing Reasons */}
                 <div className="mb-4">
                   <h4 className="font-normal text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span>ℹ️</span>
                     Why These Models Were Selected
                   </h4>
                   <div className="space-y-2">
