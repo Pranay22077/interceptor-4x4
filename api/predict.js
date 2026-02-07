@@ -154,6 +154,7 @@ function generateRoutingExplanation(routingResult) {
 /**
  * Enhanced video analysis with more detailed characteristics
  */
+function analyzeVideoFile(fileBuffer, filename) {
   const hash = createHash('md5').update(fileBuffer.subarray(0, Math.min(1024 * 100, fileBuffer.length))).digest('hex');
   const fileSize = fileBuffer.length;
   const hashInt = parseInt(hash.slice(0, 8), 16);
@@ -216,7 +217,7 @@ function generatePrediction(videoAnalysis, routingResult) {
         modelConf += (blur > 100 ? 0.1 : 0);
         break;
         
-      case "audiovisual_sync":
+        case "audiovisual_sync":
         // AV model focuses on audio-visual synchronization
         modelConf += (audio_quality < 60 ? 0.2 : -0.05);
         modelConf += (motion_complexity > 50 ? 0.1 : -0.1);
@@ -272,7 +273,9 @@ function generatePrediction(videoAnalysis, routingResult) {
   };
 }
 
-
+function handleFileUpload(file) {
+  return file;
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -287,6 +290,8 @@ export default async function handler(req, res) {
     const [fields, files] = await form.parse(req);
     const file = files.file?.[0];
     if (!file) return res.status(400).json({ error: 'No file uploaded' });
+
+    handleFileUpload(file);
 
     const fileBuffer = fs.readFileSync(file.filepath);
     const filename = file.originalFilename || 'video.mp4';

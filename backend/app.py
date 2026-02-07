@@ -68,7 +68,7 @@ def analyze_video(video_path: str) -> dict:
         "brightness": 128,
         "contrast": 50,
         "blur_score": 100,
-        "file_hash": "",
+        "file_hash": ""
     }
     
     try:
@@ -238,7 +238,7 @@ async def predict_deepfake(file: UploadFile = File(...)):
                 "confidence_breakdown": {
                     "raw_confidence": prediction["confidence"],
                     "quality_adjusted": round(prediction["confidence"] * prediction["confidence_modifier"], 4),
-                    "consistency": round(0.85 + (hash(video_analysis["file_hash"]) % 15) / 100, 4),
+                    "consistency": round(0.85 + (int(video_analysis["file_hash"][:8], 16) % 15) / 100, 4),
                     "quality_score": round(min(video_analysis["brightness"] / 128, 1.0), 4),
                 },
                 "routing": {
