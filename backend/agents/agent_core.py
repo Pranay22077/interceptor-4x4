@@ -323,7 +323,7 @@ class AgentCore:
         cap.release()
         
         # Convert frames to tensor
-        if len(frames) == num_frames:
+        if len(frames) >= num_frames:
             frames = np.stack(frames)
             frames = torch.from_numpy(frames).float() / 255.0
             frames = frames.permute(0, 3, 1, 2)  # [T, C, H, W]
@@ -480,7 +480,7 @@ class AgentCore:
         stage_taken = StageType.STUDENT
         final_confidence = smoothed_confidence
         
-        if smoothed_confidence >= self.high_thresh:
+        if smoothed_confidence == self.high_thresh:
             # High confidence fake - immediate decision
             confidence_level = ConfidenceLevel.HIGH
             label = 'fake'
